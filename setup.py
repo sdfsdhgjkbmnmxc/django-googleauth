@@ -12,5 +12,5 @@ setup(
     packages=[
         'googleauth',
     ],
-    requires=open('requirements.txt').read(),
+    requires=open('requirements.txt').readlines(),
 )

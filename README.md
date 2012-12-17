@@ -3,7 +3,7 @@ django-googleauth
 
 Install
 ```
-pip install -e git+git://github.com/github.com/sdfsdhgjkbmnmxc/django-googleauth.git#egg=googleauth
+pip install -e git+git://github.com/sdfsdhgjkbmnmxc/django-googleauth.git#egg=googleauth
 ```
 
 Setup settings.py
@@ -11,7 +11,7 @@ Setup settings.py
 root = os.path.realpath(os.path.dirname(__file__))
 
 INSTALLED_APPS = (
-	# ....    
+    # ....
     'googleauth',
 )
 
@@ -23,8 +23,8 @@ GOOGLEAUTH_USERNAME_IN_REQUEST 'myuser'
 ```
 
 Setup models.py
-```python 
-import googleauth 
+```python
+import googleauth
 
 class MyUser(googleauth.User):
     pass
@@ -32,7 +32,7 @@ class MyUser(googleauth.User):
 ```
 
 Setup urls.py
-```python 
+```python
 
 urlpatterns = patterns(
     '',
@@ -44,7 +44,7 @@ urlpatterns = patterns(
 
 Usage in views.py
 ```python 
-import googleauth 
+import googleauth
 
 @googleauth.required
 def mypage(request):
