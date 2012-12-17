@@ -1,6 +1,66 @@
 django-googleauth
 =================
 
-```python
-# settings.py
+Install
+```
+pip install -e git+git://github.com/github.com/sdfsdhgjkbmnmxc/django-googleauth.git#egg=googleauth
+```
+
+Setup settings.py
+```python 
+root = os.path.realpath(os.path.dirname(__file__))
+
+INSTALLED_APPS = (
+	# ....    
+    'googleauth',
+)
+
+# get client_secrets.json from http://code.google.com/apis/console
+GOOGLEAUTH_CLIENT_SECRETS_FILE = os.path.join(root, 'client_secrets.json')
+GOOGLEAUTH_MODEL = 'myapp.models.MyUser'
+GOOGLEAUTH_USERNAME_IN_REQUEST 'myuser'
+
+```
+
+Setup models.py
+```python 
+import googleauth 
+
+class MyUser(googleauth.User):
+    pass
+
+```
+
+Setup urls.py
+```python 
+
+urlpatterns = patterns(
+    '',
+    url(r'^googleauth/', include('googleauth.urls')),
+    # ...
+)
+
+```
+
+Usage in views.py
+```python 
+import googleauth 
+
+@googleauth.required
+def mypage(request):
+    return HttpResponse('Welcome, {}!'.format(request.myuser)
+
+def index(request):
+    return render(request, 'index.html')
+
+```
+
+Usage in index.html
+```html
+<form method="post" action="{% googleauth_login %}">
+    {% csrf_token %}
+    <input type="submit" value="Login via Google">
+</form>
+
+{#  <a href="{% googleauth_logout %}">logout</a> #}
 ```

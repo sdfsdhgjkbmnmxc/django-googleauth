@@ -9,6 +9,7 @@ from django.conf import settings
 
 TEMP_USER_SESSION_ID = 'googleauth_temp_user_id'
 USER_SESSION_ID = 'googleauth_user_id'
+REQUEST_ATTR = settings.get('GOOGLEAUTH_USERNAME_IN_REQUEST', 'googleauth_user')
 
 
 def get_model():
@@ -29,10 +30,11 @@ def get_model():
 def required(func):
     def decorated(request, *args, **kwargs):
         user_id = request.session.get(USER_SESSION_ID)
+        Model = get_model()
         try:
-            request.doer = get_model().objects.get(id=user_id)
-        except:
+            instance = Model.objects.get(id=user_id)
+        except Model.DoesNotExist:
             return HttpResponseRedirect(reverse(login))
-        else:
-            return func(request, *args, **kwargs)
+        setattr(REQUEST_ATTR, request.doer, instance)
+        return func(request, *args, **kwargs)
     return decorated

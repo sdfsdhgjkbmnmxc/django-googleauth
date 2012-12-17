@@ -4,7 +4,7 @@ import views
 
 urlpatterns = patterns(
     '',
-    url(r'^$', views.login, name='login'),
-    url(r'^oauth2callback/$', views.oauth2callback, name='oauth2callback'),
-    url(r'^logout/$', views.logout, name='logout'),
+    url(r'^login/$', views.login, name='googleauth_login'),
+    url(r'^callback/$', views.oauth2callback),
+    url(r'^logout/$', views.logout, name='googleauth_logout'),
 )
