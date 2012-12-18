@@ -9,7 +9,8 @@ from django.conf import settings
 
 TEMP_USER_SESSION_ID = 'googleauth_temp_user_id'
 USER_SESSION_ID = 'googleauth_user_id'
-REQUEST_ATTR = settings.get('GOOGLEAUTH_USERNAME_IN_REQUEST', 'googleauth_user')
+REQUEST_ATTR = getattr(settings,
+    'GOOGLEAUTH_USERNAME_IN_REQUEST', 'googleauth_user')
 
 
 def get_model():
