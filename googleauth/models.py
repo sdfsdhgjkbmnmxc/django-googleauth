@@ -1,7 +1,12 @@
 # -*- coding:utf-8 -*-
-from django.db import models
-from django.utils.translation import ugettext_lazy
 import hashlib
+
+from django.core.exceptions import ImproperlyConfigured
+from django.db import models
+from django.utils.importlib import import_module
+from django.utils.translation import ugettext_lazy
+
+from conf import MODEL
 
 
 class User(models.Model):
@@ -33,3 +38,18 @@ class User(models.Model):
 
     class Meta:
         abstract = True
+
+
+def get_model():
+    module, attr = MODEL.rsplit('.', 1) #@UndefinedVariable
+    try:
+        mod = import_module(module)
+    except ImportError, e:
+        raise ImproperlyConfigured('Error importing module %s: "%s"' %
+                                   (module, e))
+    try:
+        Model = getattr(mod, attr)
+    except AttributeError:
+        raise ImproperlyConfigured('Module "%s" does not define a "%s" '
+                                   'class.' % (module, attr))
+    return Model

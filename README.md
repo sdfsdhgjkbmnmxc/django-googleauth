@@ -20,6 +20,7 @@ GOOGLEAUTH_CLIENT_SECRETS_FILE = os.path.join(root, 'client_secrets.json')
 GOOGLEAUTH_MODEL = 'myapp.models.MyUser'
 GOOGLEAUTH_USERNAME_IN_REQUEST 'myuser'
 GOOGLEAUTH_START_PAGE = '/profile/'
+GOOGLEAUTH_LOGIN_PAGE = '/login/'
 
 ```
 
@@ -51,6 +52,7 @@ import googleauth
 def mypage(request):
     return HttpResponse('Welcome, {}!'.format(request.myuser)
 
+@googleauth.if_logged_in_then_redirect_to_start_page
 def index(request):
     return render(request, 'index.html')
 
