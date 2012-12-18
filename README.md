@@ -19,6 +19,7 @@ INSTALLED_APPS = (
 GOOGLEAUTH_CLIENT_SECRETS_FILE = os.path.join(root, 'client_secrets.json')
 GOOGLEAUTH_MODEL = 'myapp.models.MyUser'
 GOOGLEAUTH_USERNAME_IN_REQUEST 'myuser'
+GOOGLEAUTH_START_PAGE = '/profile/'
 
 ```
 
@@ -57,10 +58,10 @@ def index(request):
 
 Usage in index.html
 ```html
-<form method="post" action="{% googleauth_login %}">
+<form method="post" action="{% url googleauth_login %}">
     {% csrf_token %}
     <input type="submit" value="Login via Google">
 </form>
 
-{#  <a href="{% googleauth_logout %}">logout</a> #}
+{#  <a href="{% url googleauth_logout %}">logout</a> #}
 ```

@@ -2,7 +2,6 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
-from django.shortcuts import render
 from django.utils import simplejson
 from googleauth.core import TEMP_USER_SESSION_ID, get_model, USER_SESSION_ID
 from oauth2client import xsrfutil
@@ -10,6 +9,9 @@ from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 import httplib2
 import random
 import sys
+
+
+start_page = getattr(settings, 'GOOGLEAUTH_START_PAGE', '/')
 
 
 def oauth2callback(request):
@@ -44,14 +46,14 @@ def oauth2callback(request):
     doer.save()
 
     request.session['doer_id'] = doer.id
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect(start_page)
 
 
 def login(request):
     if TEMP_USER_SESSION_ID in request.session:
         request.session[TEMP_USER_SESSION_ID] = None
     if request.session.get(USER_SESSION_ID):
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect(start_page)
     elif request.method == 'POST':
         t = random.randint(0, sys.maxint)
         flow = _get_flow(request)
@@ -59,7 +61,7 @@ def login(request):
         request.session[TEMP_USER_SESSION_ID] = t
         return HttpResponseRedirect(flow.step1_get_authorize_url())
     else:
-        return render(request, 'login.html', {})
+        return HttpResponseRedirect(start_page)
 
 
 def logout(request):

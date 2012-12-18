@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 from core import required
+from models import User
 from django.conf import settings
 
 
