@@ -1,6 +1,5 @@
 from distutils.core import setup
 
-
 setup(
     name='django-googleauth',
     version='1.0',
@@ -12,5 +11,6 @@ setup(
     packages=[
         'googleauth',
     ],
-    requires=open('requirements.txt').readlines(),
+    install_requires=open('requirements.txt').readlines(),
 )
+
