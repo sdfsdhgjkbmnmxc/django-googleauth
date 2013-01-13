@@ -4,22 +4,23 @@ import random
 import sys
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.utils import simplejson
 from oauth2client import xsrfutil
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 
-from conf import SECRETS_FILE, USER_SESSION_ID, START_PAGE, \
+from googleauth.conf import SECRETS_FILE, USER_SESSION_ID, START_PAGE, \
     TEMP_USER_SESSION_ID
-from models import get_model
-from googleauth.conf import LOGIN_PAGE
+from googleauth.models import get_model
+from googleauth.middleware import redirect_to_login_page
 
 
 def oauth2callback(request):
     t = request.session.get(TEMP_USER_SESSION_ID)
     if not t:
-        return HttpResponseRedirect(LOGIN_PAGE)
+        return redirect_to_login_page('Try again (empty user session id)')
 
     state = request.REQUEST['state']
     if not xsrfutil.validate_token(settings.SECRET_KEY, state, t):
@@ -37,6 +38,7 @@ def oauth2callback(request):
     http = credential.authorize(http)
     _h, c = http.request('https://www.googleapis.com/oauth2/v1/userinfo')
     data = simplejson.loads(c)
+
     user, _created = get_model().objects.get_or_create(
         email=data['email'],
         defaults=dict(
@@ -45,7 +47,11 @@ def oauth2callback(request):
     )
     user.name = data.get('given_name') or user.name
     user.surname = data.get('family_name', '')
-    user.save()
+
+    try:
+        user.save()
+    except ValidationError, e:
+        return redirect_to_login_page(e.messages[0])
 
     request.session[USER_SESSION_ID] = user.id
     return HttpResponseRedirect(START_PAGE)
@@ -54,14 +60,15 @@ def oauth2callback(request):
 def login(request):
     if TEMP_USER_SESSION_ID in request.session:
         del request.session[TEMP_USER_SESSION_ID]
-    if request.method == 'POST':
-        t = random.randint(0, sys.maxint)
-        flow = _get_flow(request)
-        flow.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY, t)
-        request.session[TEMP_USER_SESSION_ID] = t
-        return HttpResponseRedirect(flow.step1_get_authorize_url())
-    else:
-        return HttpResponseRedirect(LOGIN_PAGE)
+
+    if not request.method == 'POST':
+        return redirect_to_login_page('Try again (POST method required)')
+
+    t = random.randint(0, sys.maxint)
+    flow = _get_flow(request)
+    flow.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY, t)
+    request.session[TEMP_USER_SESSION_ID] = t
+    return HttpResponseRedirect(flow.step1_get_authorize_url())
 
 
 def logout(request):
