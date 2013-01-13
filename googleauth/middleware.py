@@ -35,4 +35,4 @@ def redirect_to_login_page(reason=None):
     if reason:
         sep = '&' if ('?' in url) else '?'
         url += sep + urlencode({'reason': reason})
-    return url
+    return HttpResponseRedirect(url)
