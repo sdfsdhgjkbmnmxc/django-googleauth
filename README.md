@@ -7,7 +7,7 @@ pip install -e git+git://github.com/sdfsdhgjkbmnmxc/django-googleauth.git#egg=go
 ```
 
 Setup settings.py
-```python 
+```python
 root = os.path.realpath(os.path.dirname(__file__))
 
 INSTALLED_APPS = (
@@ -45,15 +45,19 @@ urlpatterns = patterns(
 ```
 
 Usage in views.py
-```python 
+```python
+from django.conf import settings
 import googleauth
+
 
 @googleauth.required
 def mypage(request):
     return HttpResponse('Welcome, {}!'.format(request.myuser)
 
-@googleauth.if_logged_in_then_redirect_to_start_page
+
 def index(request):
+    if not request.myuser:
+        return HttpResponseRedirect(settings.GOOGLEAUTH_LOGIN_PAGE)
     return render(request, 'index.html')
 
 ```
