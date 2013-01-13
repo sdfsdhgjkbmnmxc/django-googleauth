@@ -30,8 +30,9 @@ def _get_user_or_none(request):
         return None
 
 
-def redirect_to_login_page(reason):
-    sep = '&' if ('?' in LOGIN_PAGE) else '?'
-    return HttpResponseRedirect(LOGIN_PAGE + sep + urlencode({
-        'reason': reason,
-    }))
+def redirect_to_login_page(reason=None):
+    url = LOGIN_PAGE
+    if reason:
+        sep = '&' if ('?' in url) else '?'
+        url += sep + urlencode({'reason': reason})
+    return url

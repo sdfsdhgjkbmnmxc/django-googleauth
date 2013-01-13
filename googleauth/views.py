@@ -20,7 +20,7 @@ from googleauth.middleware import redirect_to_login_page
 def oauth2callback(request):
     t = request.session.get(TEMP_USER_SESSION_ID)
     if not t:
-        return redirect_to_login_page('Try again (empty user session id)')
+        return redirect_to_login_page()
 
     state = request.REQUEST['state']
     if not xsrfutil.validate_token(settings.SECRET_KEY, state, t):
@@ -62,7 +62,7 @@ def login(request):
         del request.session[TEMP_USER_SESSION_ID]
 
     if not request.method == 'POST':
-        return redirect_to_login_page('Try again (POST method required)')
+        return redirect_to_login_page()
 
     t = random.randint(0, sys.maxint)
     flow = _get_flow(request)
