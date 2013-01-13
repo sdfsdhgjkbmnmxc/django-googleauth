@@ -1,3 +1,3 @@
 # -*- coding:utf-8 -*-
-from decorators import required, if_logged_in_then_redirect_to_start_page
+from decorators import required
 from models import User
