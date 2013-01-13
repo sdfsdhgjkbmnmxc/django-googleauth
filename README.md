@@ -10,6 +10,11 @@ Setup settings.py
 ```python
 root = os.path.realpath(os.path.dirname(__file__))
 
+MIDDLEWARE_CLASSES = (
+    # ....
+    'googleauth.middleware.AuthenticationMiddleware',
+)
+
 INSTALLED_APPS = (
     # ....
     'googleauth',

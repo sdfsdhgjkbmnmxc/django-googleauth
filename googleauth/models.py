@@ -14,7 +14,8 @@ class User(models.Model):
 
     creation_datetime = models.DateTimeField(auto_now_add=True)
     name = models.CharField(ugettext_lazy('name'), max_length=255)
-    surname = models.CharField(ugettext_lazy('surname'), max_length=255, blank=True)
+    surname = models.CharField(ugettext_lazy('surname'), max_length=255,
+                               blank=True)
     email = models.EmailField(ugettext_lazy('email'), unique=True)
 
     def get_gravatar_url(self):
