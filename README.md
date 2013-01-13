@@ -22,8 +22,8 @@ INSTALLED_APPS = (
 
 # get client_secrets.json from http://code.google.com/apis/console
 GOOGLEAUTH_CLIENT_SECRETS_FILE = os.path.join(root, 'client_secrets.json')
-GOOGLEAUTH_MODEL = 'myapp.models.MyUser'
-GOOGLEAUTH_USERNAME_IN_REQUEST 'myuser'
+#GOOGLEAUTH_MODEL = 'myapp.models.MyUser'
+GOOGLEAUTH_USERNAME_IN_REQUEST = 'googleauth_user'
 GOOGLEAUTH_START_PAGE = '/profile/'
 GOOGLEAUTH_LOGIN_PAGE = '/login/'
 

@@ -37,8 +37,9 @@ class User(models.Model):
         self.clean()
         super(User, self).save(*args, **kwargs)
 
-    class Meta:
-        abstract = True
+    if MODEL is not None:
+        class Meta:
+            abstract = True
 
 
 def get_model():
